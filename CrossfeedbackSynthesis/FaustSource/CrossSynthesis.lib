@@ -1,0 +1,38 @@
+import("stdfaust.lib");
+
+guard(f) = min(f, ma.SR/2-1000);
+
+localLP(f1,lpfMult) = fi.lowpass(2,max(20, f1*lpfMult):guard);
+
+MAX_SAW_ORDER = 4; MAX_SAW_ORDER_NEXTPOW2 = 8; // par cannot handle the case of 0 elements
+N = 2;
+mySaw(freq) = select2(freqAbs>20, posSaw, 2*posSaw-1: poly(Nc)) : D(Nc-1) : gate(Nc-1)
+with {
+  freqAbs = freq:abs;
+  Nc = max(1,min(N,MAX_SAW_ORDER));
+  posSaw = os.lf_sawpos(freqAbs); // zero-mean, amplitude +/- 1
+  // Also note the availability of lf_sawpos_phase above.
+  poly(1,x) = x;
+  poly(2,x) = x*x;
+  poly(3,x) = x*x*x - x;
+  poly(4,x) = x*x*(x*x - 2.0);
+  poly(5,x) = x*(7.0/3 + x*x*(-10.0/3.0 + x*x));
+  poly(6,x) = x*x*(7.0 + x*x*(-5.0 + x*x));
+  p0n = float(ma.SR)/freqAbs; // period in samples
+  diff1(x) = (x - x')/(2.0/p0n);
+  diff(N) = seq(n,N,diff1); // N diff1s in series
+  factorial(0) = 1;
+  factorial(i) = i * factorial(i-1);
+  D(0) = _;
+  D(i) = diff(i)/factorial(i+1);
+  gate(N) = *(1@(N)); // delayed step for blanking startup glitch
+};
+
+CrossSineSine(f1, m1, f2, m2) = (_:abs:os.osc(*(m1)+f1):os.osc(*(m2)+f2)) ~ _;
+CrossSineSquare(f1, m1, f2, m2) = ((_*(m1)+f1):os.osc:(_*(m2)+f2:abs):os.square) ~ _;
+CrossSineTri(f1, m1, f2, m2) = ((_*(m1)+f1):os.osc:(_*(m2)+f2:abs):os.triangle) ~ _ : fi.dcblocker;
+//CrossSineTri(f1, m1, f2, m2, lpfMult) = (_:localLP:(_*(m1)+f1):os.osc:(_*(m2)+f2:abs):os.triangle) ~ _;
+
+CrossTriSine(f1, m1, f2, m2, lpfMult) = ((_*(m1)+f1):os.triangle:localLP(f1,lpfMult):(_*(m2)+f2:abs):os.osc) ~ _;
+CrossSawSine(f1, m1, f2, m2, lpfMult) = ((_*(m1)+f1):os.sawtooth:localLP(f1,lpfMult):(_*(m2)+f2:abs):os.osc) ~ _;
+CrossSquareSine(f1, m1, f2, m2, lpfMult) = ((_*(m1)+f1):os.square:localLP(f1,lpfMult):(_*(m2)+f2:abs):os.osc) ~ _;
