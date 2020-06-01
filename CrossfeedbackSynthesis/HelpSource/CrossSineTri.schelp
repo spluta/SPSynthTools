@@ -1,0 +1,58 @@
+class:: CrossSineTri
+summary:: Crossfeedback sythesis
+related:: CrossSineSine, CrossSineSquare, CrossSquareSine, CrossTriSine, CrossSawSine
+categories::  UGens>Oscillators
+
+Description::
+Crossfeedback synthesis with no block size feedback latency, written in Faust. Creates a circuit where oscillator a and oscillator b frequency modulate each other, with generally chaotic results. The modulator (the silent oscillator) in this ciruit is a Sine wave. The carrier is a Triangle wave.
+
+Audio Rate Only!
+
+classmethods::
+
+method::ar
+
+argument::freq1
+Frequency of the Modulator
+
+argument::mod1
+
+Amplitude of the Carrier as it modulates the Modulator.
+
+argument::freq2
+
+Frequency of the Carrier.
+
+argument::mod2
+
+Amplitude of the Modulator as it modulates the Carrier
+
+
+Examples::
+
+Sliders control freq1, mod1, freq2, and mod2.
+
+code::
+(
+s.waitForBoot{
+	var b;
+	a = {CrossSineTri.ar(\freq1.ar(100, 0.1), \mod1.ar(0, 0.1), \freq2.ar(200, 0.1), \mod2.ar(200, 0.1)).dup.softclip*0.1}.scope;
+
+	w = Window().front;
+
+	b = { Slider(w) } ! 4;
+	[\freq1, \mod1, \freq2, \mod2].do{|item, i| b[i].action_{|sl| a.set(item, sl.value*2000)}};
+
+	l = { StaticText(w)} ! 4;
+	[\freq1, \mod1, \freq2, \mod2].do{|item, i| l[i].string_(item.asString)};
+
+	w.layout = VLayout(
+		HLayout(*b),
+		HLayout(*l)
+	);
+	w.onClose = {a.free};
+})
+::
+
+
+
