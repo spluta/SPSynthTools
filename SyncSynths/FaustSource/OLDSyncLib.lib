@@ -1,0 +1,27 @@
+MAX_SAW_ORDER = 4; MAX_SAW_ORDER_NEXTPOW2 = 8; // par cannot handle the case of 0 elements
+N = 2;
+SyncSaw(freq, trig) = select2(freqAbs>20, posSaw, 2*posSaw-1: poly(Nc)) : D(Nc-1) : gate(Nc-1)
+with {
+  freqAbs = freq:abs;
+  Nc = max(1,min(N,MAX_SAW_ORDER));
+  //posSaw = os.lf_sawpos(freqAbs); // zero-mean, amplitude +/- 1
+  onOffB = ba.if(trig>0, 0, 1);
+  posSaw = ma.frac*(onOffB) ~ +(freqAbs'/ma.SR);
+  // Also note the availability of lf_sawpos_phase above.
+  poly(1,x) = x;
+  poly(2,x) = x*x;
+  poly(3,x) = x*x*x - x;
+  poly(4,x) = x*x*(x*x - 2.0);
+  poly(5,x) = x*(7.0/3 + x*x*(-10.0/3.0 + x*x));
+  poly(6,x) = x*x*(7.0 + x*x*(-5.0 + x*x));
+  p0n = float(ma.SR)/freqAbs; // period in samples
+  diff1(x) = (x - x')/(2.0/p0n);
+  diff(N) = seq(n,N,diff1); // N diff1s in series
+  factorial(0) = 1;
+  factorial(i) = i * factorial(i-1);
+  D(0) = _;
+  D(i) = diff(i)/factorial(i+1);
+  gate(N) = *(1@(N)); // delayed step for blanking startup glitch
+};
+
+process(freq, trig) = SyncSaw(freq, trig);

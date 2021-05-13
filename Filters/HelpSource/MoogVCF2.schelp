@@ -1,0 +1,32 @@
+TITLE:: MoogVCF2
+summary:: Julius O Smith III's Faust Moog Ladder Compiled for SC
+categories:: Undocumented classes, UGens>Undocumented
+related:: Classes/MoogVCF
+
+DESCRIPTION::
+Julius O Smith III's Faust Moog Ladder (moog_vcf_2b) Compiled for SC
+
+Copyright (C) 2003-2019 by Julius O. Smith III
+
+
+CLASSMETHODS::
+
+METHOD:: ar
+
+ARGUMENT:: in
+singal in
+
+ARGUMENT:: freq
+Cutoff Frequency of the filter
+
+ARGUMENT:: res
+Resonance of the filter - between 0 and 1 (clips at 0.999)
+
+
+EXAMPLES::
+
+code::
+{MoogVCF2.ar(WhiteNoise.ar(0.1)!2, MouseX.kr(20, 20000), MouseY.kr(0,1))}.play;
+
+{MoogVCF2.ar([Mix(LFSaw.ar([59, 61], 0, 0.1)),Mix(LFSaw.ar([59, 61]*3/2, 0, 0.1))], LFTri.ar(10).exprange(80, [1005,995]), SinOsc.ar(0.1, 3pi/2).curverange(0.4,0.95, -4))}.play;
+::

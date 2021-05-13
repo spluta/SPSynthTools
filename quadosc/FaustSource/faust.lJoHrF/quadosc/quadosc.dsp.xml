@@ -1,0 +1,32 @@
+
+<faust>
+	<name>quadosc</name>
+	<author></author>
+	<copyright></copyright>
+	<license></license>
+	<version></version>
+	<classname>mydsp</classname>
+	<inputs>1</inputs>
+	<outputs>2</outputs>
+	<meta key="filename">quadosc.dsp</meta>
+	<meta key="maths.lib/author">GRAME</meta>
+	<meta key="maths.lib/copyright">GRAME</meta>
+	<meta key="maths.lib/license">LGPL with exception</meta>
+	<meta key="maths.lib/name">Faust Math Library</meta>
+	<meta key="maths.lib/version">2.1</meta>
+	<ui>
+		<activewidgets>
+			<count>0</count>
+		</activewidgets>
+		
+		<passivewidgets>
+			<count>0</count>
+		</passivewidgets>
+		
+		<layout>
+			<group type="vgroup">
+				<label>0x00</label>
+			</group>
+		</layout>
+	</ui>
+</faust>

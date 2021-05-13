@@ -87,7 +87,7 @@ w.onClose = {a.free};
 (
 var b;
 a = {
-	CrossSawSine.ar(\f1.ar(100, 0.1).linexp(0,1,1,2000), \m1.ar(0, 0.1).linlin(0,1,0,2000), \f2.ar(100, 0.1,).linexp(0,1,1,2000), \m2.ar(0, 0.1).linlin(0,1,0,2000), \lpfMult.ar(1, 0.1).linlin(0,1,1,20)).dup*0.1}.scope;
+	CrossSawSine.ar(\f1.ar(0.5, 0.1).linexp(0,1,1,2000), \m1.ar(0, 0.1).linlin(0,1,0,2000), \f2.ar(0.5, 0.1).linexp(0,1,1,2000), \m2.ar(0, 0.1).linlin(0,1,0,2000), \lpfMult.ar(1, 0.1).linlin(0,1,1,20)).dup*0.1}.scope;
 
 w = Window().front;
 

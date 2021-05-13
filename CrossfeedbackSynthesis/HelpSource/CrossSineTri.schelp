@@ -1,10 +1,12 @@
 class:: CrossSineTri
 summary:: Crossfeedback sythesis
+source:: CrossSineTri.sc
 related:: CrossSineSine, CrossSineSquare, CrossSquareSine, CrossTriSine, CrossSawSine
-categories::  UGens>Oscillators
+categories::  UGens>Generators>Deterministic
 
 Description::
-Crossfeedback synthesis with no block size feedback latency, written in Faust. Creates a circuit where oscillator a and oscillator b frequency modulate each other, with generally chaotic results. The modulator (the silent oscillator) in this ciruit is a Sine wave. The carrier is a Triangle wave.
+
+Crossfeedback synthesis with single sample feedback latency, written in Faust. Creates a circuit where oscillator a and oscillator b frequency modulate each other, with generally chaotic results. The modulator (the silent oscillator) in this ciruit is a Sine wave. The carrier is a Triangle wave.
 
 Audio Rate Only!
 
